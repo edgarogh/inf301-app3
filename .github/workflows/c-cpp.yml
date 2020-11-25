@@ -1,0 +1,23 @@
+name: C CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: main
+      run: make main
+    - name: dotcv
+      run: make dotcv
+    - name: acte 1
+      run: make tests_acte1
+    - name: acte 2
+      run: make tests_acte2
