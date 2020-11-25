@@ -29,4 +29,6 @@ void init_liste_vide(liste_t *L);
  */
 int ajouter_tete(liste_t *L, string c);
 
+void supprimer_tete(liste_t *L);
+
 #endif /* _LISTES_H */
