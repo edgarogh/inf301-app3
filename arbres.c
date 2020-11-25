@@ -91,4 +91,9 @@ arbre lire_arbre(FILE *f) {
   return racine;
 }
 
-void affiche_arbre(noeud *racine) { /* à remplir */ }
+bool est_esp(arbre a) { return a->droit == NULL && a->gauche == NULL; }
+
+bool est_carac(arbre a) { return a->droit != NULL && a->gauche != NULL; }
+
+void affiche_arbre(noeud *racine) { /* à remplir */
+}

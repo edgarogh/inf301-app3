@@ -26,5 +26,8 @@ acte3: acte3.o $(OBJS)
 # comment créer les .o à partir des .c
 main: main.o arbresphylo.o arbres.o listes.o
 
+dotcv: dot.c arbres.o arbres.h
+	$(CC) -DDOT_CONVERT_MAIN arbres.o dot.c -o $@
+
 clean:
-	rm -f main *.o
+	rm -f main dotcv *.o

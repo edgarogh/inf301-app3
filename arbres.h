@@ -1,7 +1,8 @@
-#include <stdio.h>
-
 #ifndef ARBRES_H
 #define ARBRES_H
+
+#include <stdbool.h>
+#include <stdio.h>
 
 /* Structure d'un noeud d'arbre */
 struct noeud_s;
@@ -28,6 +29,12 @@ noeud *nouveau_noeud(void);
  * gauche et droit).
  */
 arbre lire_arbre(FILE *f);
+
+/* Ranvoie vrai si le nœud représente une espèce (feuille) */
+bool est_esp(arbre a);
+
+/* Renvoie vrai si le nœud représente une caractèristique */
+bool est_carac(arbre a);
 
 /* Fonction d'affichage, à remplir */
 void affiche_arbre(arbre);
