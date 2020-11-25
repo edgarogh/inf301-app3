@@ -13,6 +13,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: install unzip
+      run: sudo apt install unzip
+    - name: unzip tests
+      run: unzip tests-actes123.zip
     - name: main
       run: make main
     - name: dotcv
