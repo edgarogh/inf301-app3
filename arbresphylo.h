@@ -2,6 +2,7 @@
 #define ARBRESPHYLO_H
 
 #include "listes.h"
+#include "arbres.h"
 
 /* Analyse un arbre: doit mettre à jour le nombre d'espèces et de
  * caractéristiques.
