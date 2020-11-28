@@ -12,15 +12,10 @@ void analyse_arbre_rec(arbre racine, int *nb_esp, int *nb_carac) {
       *nb_esp += 1;
     }
 
-    else if (est_carac(racine)) {
+    else {
       *nb_carac += 1;
       analyse_arbre_rec(racine->gauche, nb_esp, nb_carac);
       analyse_arbre_rec(racine->droit, nb_esp, nb_carac);
-    }
-
-    else {
-      fprintf(stderr, "Nœud invalide");
-      exit(1);
     }
   }
 }
@@ -76,7 +71,7 @@ int ajouter_espece(arbre *a, char *espece, cellule_t *seq) {
       // uniquement le premier car., puisqu'un nœud de type caractère doit
       // absolument être relié des deux côtés (et il ne peut donc pas y en
       // avoir plus, qui n'auraient nulle part où relier leur nœud de gauche)
-      
+
       noeud* espece_n = malloc(sizeof(noeud));
       espece_n->valeur = espece;
       espece_n->gauche = NULL;
@@ -91,8 +86,8 @@ int ajouter_espece(arbre *a, char *espece, cellule_t *seq) {
       return 0;
     }
   }
-  
-  else if (est_carac(*a)) {
+
+  else {
     // Vrai si l'espèce à ajouter possède le caractère du nœud `a`
     bool espece_possede_a
       = (seq != NULL) && (0 == strcmp((*a)->valeur, seq->val));
@@ -106,10 +101,5 @@ int ajouter_espece(arbre *a, char *espece, cellule_t *seq) {
       // ...alors que si elle ne le possède pas, on reste sur la car. actuelle
       return ajouter_espece(a, espece, seq);
     }
-  }
-  
-  else {
-    printf("Nœud invalide\n");
-    exit(1);
   }
 }
