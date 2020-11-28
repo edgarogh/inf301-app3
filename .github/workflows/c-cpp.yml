@@ -8,7 +8,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -17,7 +16,23 @@ jobs:
       run: make main
     - name: dotcv
       run: make dotcv
-    - name: acte 1
+
+  test_acte1:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: unzip tests
+      run: unzip tests-actes123.zip
+    - name: make
       run: make tests_acte1
-    - name: acte 2
+
+  test_acte2:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: unzip tests
+      run: unzip tests-actes123.zip
+    - name: make
       run: make tests_acte2
