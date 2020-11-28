@@ -36,3 +36,13 @@ jobs:
       run: unzip tests-actes123.zip
     - name: make
       run: make tests_acte2
+
+  test_acte3:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: unzip tests
+      run: unzip tests-actes123.zip
+    - name: make
+      run: make tests_acte3
