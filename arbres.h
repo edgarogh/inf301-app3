@@ -33,9 +33,6 @@ arbre lire_arbre(FILE *f);
 /* Renvoie vrai si le nœud représente une espèce (feuille) */
 bool est_esp(arbre a);
 
-/* Renvoie vrai si le nœud représente une caractèristique */
-bool est_carac(arbre a);
-
 /* Fonction d'affichage, à remplir */
 void affiche_arbre(arbre);
 
