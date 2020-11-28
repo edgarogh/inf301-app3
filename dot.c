@@ -1,9 +1,8 @@
-#include "arbres.h"
-#include <stdio.h>
+#include "dot.h"
 
 /**
  * Créé des flèches Dot pour un arbre donné
- * 
+ *
  * @returns le nom du nœud Dot créé
  */
 char* arbre_vers_edges(arbre a, FILE* out) {
