@@ -30,7 +30,7 @@ noeud *nouveau_noeud(void);
  */
 arbre lire_arbre(FILE *f);
 
-/* Ranvoie vrai si le nœud représente une espèce (feuille) */
+/* Renvoie vrai si le nœud représente une espèce (feuille) */
 bool est_esp(arbre a);
 
 /* Renvoie vrai si le nœud représente une caractèristique */
