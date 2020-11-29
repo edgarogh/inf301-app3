@@ -67,20 +67,34 @@ int ajouter_espece(arbre *a, char *espece, cellule_t *seq) {
       return 1;
     } else {
       // Ici, l'arbre (le nœud) est une espèce et il reste 1 ou plus caractères
-      // permettant de la différencier de l'espèce à ajouter. On prend
-      // uniquement le premier car., puisqu'un nœud de type caractère doit
-      // absolument être relié des deux côtés (et il ne peut donc pas y en
-      // avoir plus, qui n'auraient nulle part où relier leur nœud de gauche)
+      // permettant de la différencier de l'espèce à ajouter. On créé
+      // itérativement les caractères restants dans `seq` et on ajoute
+      // l'`espèce` en feuille.
 
-      noeud* espece_n = malloc(sizeof(noeud));
-      espece_n->valeur = espece;
-      espece_n->gauche = NULL;
-      espece_n->droit = NULL;
+      noeud* feuille = malloc(sizeof(noeud));
+      feuille->valeur = espece;
+      feuille->gauche = NULL;
+      feuille->droit = NULL;
 
       noeud* caractere = malloc(sizeof(noeud));
       caractere->valeur = seq->val;
       caractere->gauche = *a;
-      caractere->droit = espece_n;
+
+      cellule_t* reste = seq->suivant;
+      noeud* caractereA = caractere;
+
+      while (reste) {
+        noeud* caractereN = malloc(sizeof(noeud));
+        caractereN->valeur = reste->val;
+        caractereN->gauche = NULL;
+        caractereN->droit = feuille;
+        caractereA->droit = caractereN;
+        caractereA = caractereN;
+
+        reste = reste->suivant;
+      }
+
+      caractereA->droit = feuille;
 
       *a = caractere;
       return 0;
@@ -93,13 +107,11 @@ int ajouter_espece(arbre *a, char *espece, cellule_t *seq) {
       = (seq != NULL) && (0 == strcmp((*a)->valeur, seq->val));
 
     if (espece_possede_a) {
-      *a = (*a)->droit;
       // Si l'espèce possède la caractéristique, on "passe à la suivante"...
-      return ajouter_espece(a, espece, seq->suivant);
+      return ajouter_espece(&(*a)->droit, espece, seq->suivant);
     } else {
-      *a = (*a)->gauche;
       // ...alors que si elle ne le possède pas, on reste sur la car. actuelle
-      return ajouter_espece(a, espece, seq);
+      return ajouter_espece(&(*a)->gauche, espece, seq);
     }
   }
 }
