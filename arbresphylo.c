@@ -35,28 +35,32 @@ void analyse_arbre(arbre racine, int *nb_esp, int *nb_carac) {
 /* Recherche l'espece dans l'arbre. Modifie la liste passée en paramètre pour y
  * mettre les caractéristiques. Retourne 0 si l'espèce a été retrouvée, 1 sinon.
  */
+
+bool present_espece(arbre a, char *espece){
+  if (a == NULL){
+    return false;
+  }
+  if (strcmp(a->valeur, espece) == 0){
+    return true;
+  }
+  return present_espece(a->gauche, espece) || present_espece(a->droit, espece);
+}
+
+
 int rechercher_espece(arbre a, char *espece, liste_t *seq) {
   if (a == NULL) {
     return 1;
   }
-  if (a->gauche != NULL){
-    rechercher_espece(a->gauche, espece, seq);
+  if (strcmp(a->valeur, espece) == 0){
+    return 0;
   }
-  else if (a->droit != NULL){
-    ajouter_tete(seq, a->valeur);
-    /*while (seq->tete->val != a->valeur){
-        supprimer_tete(seq);
-    }*/
-    rechercher_espece(a->droit, espece, seq);
+  
+  if (present_espece(a->gauche, espece)){
+    return rechercher_espece(a->gauche, espece, seq);
   }
-  else {
-    if (strcmp(a->valeur, espece) == 0){
-        return 0;
-        //trouver un moyen de supprimer les éléments en trop de la séquence
-    }
-    else {
-        // remonter dans l'arbre
-    }
+  else if (present_espece(a->droit, espece)){
+    ajouter_fin(seq, a->valeur);
+    return rechercher_espece(a->droit, espece, seq);
   }
   return 1;
 }
@@ -66,7 +70,7 @@ int rechercher_espece(arbre a, char *espece, liste_t *seq) {
  */
 int ajouter_espece(arbre *a, char *espece, cellule_t *seq) {
   bool e_esp = est_esp(*a);
-  bool e_car = est_carac(*a);
+  //bool e_car = est_carac(*a);
 
   // FIXME conditions à tester
   if (seq == NULL) {

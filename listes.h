@@ -27,6 +27,9 @@ void init_liste_vide(liste_t *L);
  * Si l'ajout est réussi, le résultat est 0,
  * et 1 sinon (échec de l'ajout)
  */
+
+int ajouter_fin(liste_t *L, string c);
+
 int ajouter_tete(liste_t *L, string c);
 
 void supprimer_tete(liste_t *L);
