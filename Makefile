@@ -2,7 +2,7 @@ all: main acte1 acte2 acte3
 
 
 CC=clang
-CFLAGS=-g -Wall -Wextra -Werror -Wno-unused-parameter
+CFLAGS=-g -Wall -Wextra -Wno-unused-parameter
 
 
 
