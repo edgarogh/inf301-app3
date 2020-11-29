@@ -12,15 +12,10 @@ void analyse_arbre_rec(arbre racine, int *nb_esp, int *nb_carac) {
       *nb_esp += 1;
     }
 
-    else if (est_carac(racine)) {
+    else {
       *nb_carac += 1;
       analyse_arbre_rec(racine->gauche, nb_esp, nb_carac);
       analyse_arbre_rec(racine->droit, nb_esp, nb_carac);
-    }
-
-    else {
-      fprintf(stderr, "Nœud invalide");
-      exit(1);
     }
   }
 }
@@ -61,22 +56,62 @@ int rechercher_espece(arbre a, char *espece, liste_t *seq) {
   return 1;
 }
 
-/* Doit renvoyer 0 si l'espece a bien ete ajoutee, 1 sinon, et ecrire un
+/**
+ * Doit renvoyer 0 si l'espece a bien ete ajoutee, 1 sinon, et ecrire un
  * message d'erreur.
  */
 int ajouter_espece(arbre *a, char *espece, cellule_t *seq) {
-  bool e_esp = est_esp(*a);
-  bool e_car = est_carac(*a);
+  if (est_esp(*a)) {
+    if (seq == NULL) {
+      fprintf(stderr, "L'espèce à ajouter '%s' est indifférenciable de l'espèce '%s'\n", espece, (*a)->valeur);
+      return 1;
+    } else {
+      // Ici, l'arbre (le nœud) est une espèce et il reste 1 ou plus caractères
+      // permettant de la différencier de l'espèce à ajouter. On créé
+      // itérativement les caractères restants dans `seq` et on ajoute
+      // l'`espèce` en feuille.
 
-  // FIXME conditions à tester
-  if (seq == NULL) {
+      noeud* feuille = malloc(sizeof(noeud));
+      feuille->valeur = espece;
+      feuille->gauche = NULL;
+      feuille->droit = NULL;
 
+      noeud* caractere = malloc(sizeof(noeud));
+      caractere->valeur = seq->val;
+      caractere->gauche = *a;
+
+      cellule_t* reste = seq->suivant;
+      noeud* caractereA = caractere;
+
+      while (reste) {
+        noeud* caractereN = malloc(sizeof(noeud));
+        caractereN->valeur = reste->val;
+        caractereN->gauche = NULL;
+        caractereN->droit = feuille;
+        caractereA->droit = caractereN;
+        caractereA = caractereN;
+
+        reste = reste->suivant;
+      }
+
+      caractereA->droit = feuille;
+
+      *a = caractere;
+      return 0;
+    }
   }
-  else if (e_esp) {
 
-  }
-  else if (0 == strcmp((*a)->valeur, seq->val)) {
+  else {
+    // Vrai si l'espèce à ajouter possède le caractère du nœud `a`
+    bool espece_possede_a
+      = (seq != NULL) && (0 == strcmp((*a)->valeur, seq->val));
 
+    if (espece_possede_a) {
+      // Si l'espèce possède la caractéristique, on "passe à la suivante"...
+      return ajouter_espece(&(*a)->droit, espece, seq->suivant);
+    } else {
+      // ...alors que si elle ne le possède pas, on reste sur la car. actuelle
+      return ajouter_espece(&(*a)->gauche, espece, seq);
+    }
   }
-  return 1;
 }

@@ -6,10 +6,13 @@
  * @returns le nom du nœud Dot créé
  */
 char* arbre_vers_edges(arbre a, FILE* out) {
-  if (est_carac(a)) {
+  if (a->gauche) {
     char* g = arbre_vers_edges(a->gauche, out);
-    char* d = arbre_vers_edges(a->droit, out);
     if (g != NULL) fprintf(out, "%s -> %s [label=non]\n", a->valeur, g);
+  }
+
+  if (a->droit) {
+    char* d = arbre_vers_edges(a->droit, out);
     if (d != NULL) fprintf(out, "%s -> %s [label=oui]\n", a->valeur, d);
   }
 
