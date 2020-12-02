@@ -37,5 +37,7 @@ main: main.o arbresphylo.o arbres.o listes.o
 dotcv: dot.c dot.h arbres.o arbres.h
 	$(CC) -DDOT_CONVERT_MAIN arbres.o dot.c -o $@
 
+recherche-appolab: recherche-appolab.o arbresphylo.o arbres.o listes.o
+
 clean:
 	rm -f main dotcv *.o
