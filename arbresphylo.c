@@ -124,27 +124,37 @@ int ajouter_espece(arbre *a, char *espece, cellule_t *seq) {
   }
 }
 
-// TODO renommer
-void acte3b(noeud *racine) {
+/* Doit afficher la liste des caractéristiques niveau par niveau, de gauche
+ * à droite, dans le fichier fout.
+ * Appeler la fonction avec fout=stdin pour afficher sur la sortie standard.
+ */
+void afficher_par_niveau(arbre racine, FILE* fout) {
   noeud *comp, *n;
   liste_t *f = NULL;
   ajouter_file(f, racine);
-  printf("%s\n", racine->valeur);
+  fprintf(fout, "%s\n", racine->valeur);
   while (f->tete != NULL){
     comp = racine;
     n = pop_file(f);
     if (n->gauche != NULL && (n->gauche->gauche != NULL || n->gauche->droit != NULL)){
       ajouter_file(f, n->gauche);
-      printf("%s", n->gauche->valeur);
+      fprintf(fout, "%s", n->gauche->valeur);
     }
     if (n->droit != NULL && (n->droit->gauche != NULL || n->droit->droit != NULL)){
       ajouter_file(f, n->droit);
-      printf("%s", n->droit->valeur);
+      fprintf(fout, "%s", n->droit->valeur);
     }
     while (comp != NULL){
       if (strcmp(comp->valeur, n->droit->valeur) == 0){
-        printf("\n");
+        fprintf(fout, "\n");
       }
     }
   }
+}
+
+// Acte 4
+
+int ajouter_carac(arbre* a, char* carac, cellule_t* seq) {
+   printf ("<<<<< À faire: fonction ajouter_carac fichier " __FILE__ "\n >>>>>");
+   return 0;
 }
