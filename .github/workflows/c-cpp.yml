@@ -23,7 +23,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: unzip tests
-      run: unzip tests-actes123.zip
+      run: unzip tests-actes1234.zip
     - name: make
       run: make tests_acte1
 
@@ -33,7 +33,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: unzip tests
-      run: unzip tests-actes123.zip
+      run: unzip tests-actes1234.zip
     - name: make
       run: make tests_acte2
 
@@ -43,6 +43,26 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: unzip tests
-      run: unzip tests-actes123.zip
+      run: unzip tests-actes1234.zip
     - name: make
       run: make tests_acte3
+
+  test_acte3b:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: unzip tests
+      run: unzip tests-actes1234.zip
+    - name: make
+      run: make tests_acte3b
+
+  test_acte4:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: unzip tests
+      run: unzip tests-actes1234.zip
+    - name: make
+      run: make tests_acte4

@@ -12,10 +12,16 @@ Nous vous fournissons également des programmes automatiques pour tester vos
 fonctions.  Pour chacune des fonctions des différents actes, il est important
 de respecter la spécification demandée pour pouvoir passer les suites de test.
 
-Nous vous fournissons des suites de tests pour les actes I, II et III-A.
+Nous vous fournissons des suites de tests pour les actes I, II et III et IV.
 La façon de tester dépend du langage de programmation utilisé.
 
-Des tests pour les actes III-B et IV vous seront fournis ultérieurement.
+POUR L'ACTE IV: Notez que pour l'acte IV, on considère qu'il n'est pas possible
+d'insérer une caractéristique à un arbre vide, ni d'insérer une caractéristique
+qui n'est possédée par aucune espèce déjà présente dans l'arbre (pour ce
+cas-là, ajout_espece fait l'affaire). Ceci permet d'éviter d'avoir à ajouter
+des noeuds caractéristique sans enfant qui seraient confondues avec des
+espèces/feuilles.
+
 Par contre, vous êtes responsables de tester et fournir vous même quelques 
 tests pour l'acte V pour le rendu.
 
