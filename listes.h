@@ -1,6 +1,8 @@
 #ifndef _LISTES_H
 #define _LISTES_H
 
+#include "arbres.h"
+
 typedef struct liste liste_t;
 /* Type de liste à compléter selon votre besoin. */
 
@@ -9,6 +11,7 @@ typedef char *string;
 struct cellule {
   string val;
   struct cellule *suivant;
+  noeud *nd;
 };
 
 typedef struct cellule cellule_t;
@@ -33,5 +36,9 @@ int ajouter_fin(liste_t *L, string c);
 int ajouter_tete(liste_t *L, string c);
 
 void supprimer_tete(liste_t *L);
+
+int ajouter_file(liste_t *L, noeud *n);
+
+noeud *pop_file(liste_t *f);
 
 #endif /* _LISTES_H */
