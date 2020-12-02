@@ -65,9 +65,13 @@ int rechercher_espece(arbre a, char *espece, liste_t *seq) {
  * message d'erreur.
  */
 int ajouter_espece(arbre *a, char *espece, cellule_t *seq) {
-  if (est_esp(*a)) {
+  assert(a != NULL);
+
+  if (*a == NULL || est_esp(*a)) {
+    char* a_espece = (*a == NULL) ? "<inconnue>" : (*a)->valeur;
+
     if (seq == NULL) {
-      fprintf(stderr, "L'espèce à ajouter '%s' est indifférenciable de l'espèce '%s'\n", espece, (*a)->valeur);
+      fprintf(stderr, "L'espèce à ajouter '%s' est indifférenciable de l'espèce '%s'\n", espece, a_espece);
       return 1;
     } else {
       // Ici, l'arbre (le nœud) est une espèce et il reste 1 ou plus caractères
