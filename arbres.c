@@ -93,5 +93,31 @@ arbre lire_arbre(FILE *f) {
 
 bool est_esp(arbre a) { return a->droit == NULL && a->gauche == NULL; }
 
-void affiche_arbre(noeud *racine) { /* à remplir */
+/**
+ * Imprime une indentation dans la sortie standard, sans sauter de ligne
+ */
+void affiche_arbre_indent__pad(int indent) {
+  printf("%*s", indent * 2, "");
+}
+
+/**
+ * Affiche un nœud
+ */
+void affiche_arbre_indent(noeud *a, int indent) {
+  affiche_arbre_indent__pad(indent);
+  if (a == NULL) {
+    printf("/\n");
+  } else if (est_esp(a)) {
+    printf("(%s)\n", a->valeur);
+  } else {
+    printf("(%s\n", a->valeur);
+    affiche_arbre_indent(a->gauche, indent + 1);
+    affiche_arbre_indent(a->droit, indent + 1);
+    affiche_arbre_indent__pad(indent);
+    printf(")\n");
+  }
+}
+
+void affiche_arbre(noeud *racine) {
+  affiche_arbre_indent(racine, 0);
 }
