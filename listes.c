@@ -4,24 +4,30 @@
 #include <stdlib.h>
 #include <string.h>
 
-/* fichier à compléter au besoin */
-
 void init_liste_vide(liste_t *L) {
   L->tete = NULL;
 }
 
-int ajouter_fin(liste_t *L, string c) {
-  cellule_t *cellule = malloc(sizeof(cellule_t));
-  cellule->val = c;
+/**
+ * Ajouter une chaîne de caractères à la fin d'une liste chaînée
+ */
+int ajouter_fin(liste_t *L, string s) {
+  cellule_t *queue = malloc(sizeof(cellule_t));
+  queue->val = s;
+  queue->suivant = NULL;
+
   if (L->tete == NULL){
-    L->tete = cellule;
+    L->tete = queue;
     return 0;
   }
-  cellule_t *second = L->tete;
-  while(second->suivant != NULL){
-    second = second->suivant;
+
+  cellule_t *c = L->tete;
+
+  while(c->suivant != NULL) {
+    c = c->suivant;
   }
-  second->suivant = cellule;
+
+  c->suivant = queue;
   return 0;
 }
 
