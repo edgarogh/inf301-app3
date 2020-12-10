@@ -1,5 +1,6 @@
 #include "listes.h"
 #include <assert.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -71,4 +72,27 @@ noeud *pop_file(liste_t *f){
   }
   printf("Erreur : vous essayez de récupérer un élément dans une file vide");
   exit(1);
+}
+
+int liste_longueur(cellule_t *L) {
+  int total = 0;
+
+  while (L) {
+    total++;
+    L = L->suivant;
+  }
+
+  return total;
+}
+
+bool liste_contient(cellule_t *L, string v) {
+  while (L) {
+    // On teste d'abord l'égalité référentielle pour aller plus vite, si jamais
+    if ((L->val == v) || (0 == strcmp(L->val, v))) {
+      return true;
+    }
+    L = L->suivant;
+  }
+
+  return false;
 }

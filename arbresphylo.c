@@ -154,7 +154,108 @@ void afficher_par_niveau(arbre racine, FILE* fout) {
 
 // Acte 4
 
-int ajouter_carac(arbre* a, char* carac, cellule_t* seq) {
-   printf ("<<<<< À faire: fonction ajouter_carac fichier " __FILE__ "\n >>>>>");
-   return 0;
+/**
+ * Utilisé dans `ajouter_carac__trouver_sous_arbre`, qui associe une des
+ * valeurs de cet enum à chaque sous arbre.
+ */
+typedef enum {
+  SubtreeValid = 1,
+  SubtreeUnknown = 2,
+  SubtreeInvalid = 4,
+  RecurseReturn = 8,
+} subtree_valid;
+
+typedef struct {
+  arbre* sous_arbre;
+  int feuilles;
+  subtree_valid recurse;
+} sous_arbre_result;
+
+/**
+ * Renvoie l'adresse de `*a` si `*a` et toutes ses feuilles sont dans
+ * `especes`, NULL sinon
+ */
+sous_arbre_result ajouter_carac__trouver_sous_arbre(arbre* a, cellule_t* especes) {
+  if (*a == NULL) {
+    return (sous_arbre_result) { .sous_arbre = a, .recurse = SubtreeValid, .feuilles = 0 };
+  }
+
+  // Espèce, le plus simple à gérer
+  if (est_esp(*a)) {
+    if (liste_contient(especes, (*a)->valeur)) {
+      return (sous_arbre_result) { .sous_arbre = a, .recurse = SubtreeValid, .feuilles = 1 };
+    } else {
+      return (sous_arbre_result) { .sous_arbre = NULL, .recurse = SubtreeInvalid, .feuilles = 0 };
+    }
+  }
+
+  // Caractère, le plus complexe
+  else {
+    sous_arbre_result g = ajouter_carac__trouver_sous_arbre(&(*a)->gauche, especes);
+    sous_arbre_result d = ajouter_carac__trouver_sous_arbre(&(*a)->droit, especes);
+
+    if (g.recurse == RecurseReturn) {
+      return g;
+    }
+
+    if (d.recurse == RecurseReturn) {
+      return d;
+    }
+
+    if ((g.recurse == SubtreeValid) && (d.recurse == SubtreeValid)) {
+      return (sous_arbre_result) { .sous_arbre = a, .recurse = SubtreeValid, .feuilles = g.feuilles + d.feuilles };
+    } else if ((g.recurse == SubtreeUnknown) && (d.recurse == SubtreeUnknown)) {
+      return (sous_arbre_result) { .sous_arbre = a, .recurse = SubtreeUnknown, .feuilles = g.feuilles + d.feuilles };
+    } else if ((g.recurse == SubtreeInvalid) && (d.recurse == SubtreeInvalid)) {
+      return (sous_arbre_result) { .sous_arbre = NULL, .recurse = SubtreeInvalid, .feuilles = g.feuilles + d.feuilles };
+    }
+
+    else if ((g.recurse == SubtreeValid) && (d.recurse == SubtreeInvalid)) {
+      g.recurse = RecurseReturn;
+      return g;
+    } else if ((g.recurse == SubtreeInvalid) && (d.recurse == SubtreeValid)) {
+      d.recurse = RecurseReturn;
+      return d;
+    }
+
+    else if ((g.recurse == SubtreeValid) && (d.recurse == SubtreeUnknown)) {
+      return (sous_arbre_result) { .sous_arbre = a, .recurse = SubtreeValid, .feuilles = g.feuilles };
+    } else if ((g.recurse == SubtreeUnknown) && (d.recurse == SubtreeValid)) {
+      return (sous_arbre_result) { .sous_arbre = a, .recurse = SubtreeValid, .feuilles = d.feuilles };
+    }
+
+    else if ((g.recurse == SubtreeInvalid) && (d.recurse == SubtreeUnknown)) {
+      g.recurse = RecurseReturn;
+      return g;
+    } else if ((g.recurse == SubtreeUnknown) && (d.recurse == SubtreeInvalid)) {
+      d.recurse = RecurseReturn;
+      return d;
+    }
+  }
+}
+
+/**
+ * Cherche un sous-arbre composé de feuilles de `especes` uniquement et le
+ * déplace en sous-arbre droit d'un nouveau nœud "carac" qui prend sa place.
+ */
+int ajouter_carac(arbre* a, char* carac, cellule_t* especes) {
+  sous_arbre_result sa = ajouter_carac__trouver_sous_arbre(a, especes);
+
+  if (sa.sous_arbre && *(sa.sous_arbre)) {
+    if (sa.feuilles == liste_longueur(especes)) {
+      printf("Double inclusion bonne %d %d\n", sa.feuilles, liste_longueur(especes));
+      arbre carac_n = malloc(sizeof(noeud));
+      carac_n->valeur = carac;
+      carac_n->gauche = NULL;
+      carac_n->droit = *(sa.sous_arbre);
+      *(sa.sous_arbre) = carac_n;
+
+      return 1;
+    } else {
+      printf("Double inclusion pas bonne\n");
+      return 0;
+    }
+  } else {
+    return 0;
+  }
 }

@@ -41,4 +41,13 @@ int ajouter_file(liste_t *L, noeud *n);
 
 noeud *pop_file(liste_t *f);
 
+int liste_longueur(cellule_t *L);
+
+/**
+ * O(n)
+ *
+ * @returns `true` si la liste contient la chaine `v` (égalité structurelle)
+ */
+bool liste_contient(cellule_t *L, string v);
+
 #endif /* _LISTES_H */
