@@ -54,7 +54,7 @@ int rechercher_espece(arbre a, char *espece, liste_t *seq) {
     return rechercher_espece(a->gauche, espece, seq);
   }
   else if (present_espece(a->droit, espece)){
-    ajouter_fin(seq, a->valeur);
+    ajouter_fin(seq, a->valeur, 0);
     return rechercher_espece(a->droit, espece, seq);
   }
   return 1;
@@ -128,29 +128,73 @@ int ajouter_espece(arbre *a, char *espece, cellule_t *seq) {
  * à droite, dans le fichier fout.
  * Appeler la fonction avec fout=stdin pour afficher sur la sortie standard.
  */
+
+  // remplir la liste avec les éléments les plus à droite
+  // parcour en largeur en stockant la hauteur de chaque noeud
+  // puis supprimer les éléments qui ont la même hauteur que leur suivant
+
 void afficher_par_niveau(arbre racine, FILE* fout) {
-  noeud *comp, *n;
-  liste_t *f = NULL;
-  ajouter_file(f, racine);
-  fprintf(fout, "%s\n", racine->valeur);
+  // Remplissage d'une liste chaînée avec tous les noeuds de l'arbre qui ne sont pas des feuilles
+  if (racine == NULL || (racine->gauche == NULL && racine->droit == NULL)){
+    return;
+  }
+  int i = 0;
+  noeud *n = NULL;
+  liste_n file;
+  init_liste_noeud_vide(&file);
+  liste_n *f = &file;
+  liste_t l_cmp, l_parcours;
+  init_liste_vide(&l_cmp);
+  liste_t *liste_comp = &l_cmp;
+  init_liste_vide(&l_parcours);
+  liste_t *liste_parcours = &l_parcours;
+  ajouter_fin(liste_comp, racine->valeur, i);
+  ajouter_fin_noeud(f, racine, i);
   while (f->tete != NULL){
-    comp = racine;
-    n = pop_file(f);
+    n = supprimer_tete_noeud(f, &i);
     if (n->gauche != NULL && (n->gauche->gauche != NULL || n->gauche->droit != NULL)){
-      ajouter_file(f, n->gauche);
-      fprintf(fout, "%s", n->gauche->valeur);
+      ajouter_fin_noeud(f, n->gauche, i+1);
+      ajouter_fin(liste_comp, n->gauche->valeur, i+1);
+      ajouter_fin(liste_parcours, n->gauche->valeur, i+1);
+  
     }
     if (n->droit != NULL && (n->droit->gauche != NULL || n->droit->droit != NULL)){
-      ajouter_file(f, n->droit);
-      fprintf(fout, "%s", n->droit->valeur);
+      ajouter_fin_noeud(f, n->droit, i+1);
+      ajouter_fin(liste_comp, n->droit->valeur, i+1);
+      ajouter_fin(liste_parcours, n->droit->valeur, i+1);
     }
-    while (comp != NULL){
-      if (strcmp(comp->valeur, n->droit->valeur) == 0){
-        fprintf(fout, "\n");
+  }
+
+  // Tri de la liste pour ne garder que les éléments le plus à droite pour chaque niveau
+  cellule_t *prec = liste_comp->tete;
+  cellule_t *parcours = prec->suivant;
+  if (parcours != NULL){
+    while (parcours->suivant != NULL){
+      if (parcours->hauteur == parcours->suivant->hauteur){
+        prec->suivant = parcours->suivant;
+        parcours = prec->suivant;
+      } else {
+        prec = prec->suivant;
+        parcours = prec->suivant;
       }
     }
   }
+
+  // Parcours final de l'arbre et affichage des caractéristiques
+  fprintf(fout, "%s\n", racine->valeur);
+  supprimer_tete(liste_comp);
+  while (liste_parcours->tete != NULL){
+    fprintf(fout, "%s ", liste_parcours->tete->val);
+    if (liste_comp->tete != NULL){
+      if (liste_parcours->tete->val == liste_comp->tete->val){
+        fprintf(fout, "\n");
+        supprimer_tete(liste_comp);
+      }
+    }
+    supprimer_tete(liste_parcours);
+  }
 }
+
 
 // Acte 4
 

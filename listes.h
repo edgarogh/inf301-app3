@@ -11,16 +11,35 @@ typedef char *string;
 struct cellule {
   string val;
   struct cellule *suivant;
-  noeud *nd;
+  int hauteur;
 };
 
 typedef struct cellule cellule_t;
 
 struct liste {
   cellule_t *tete;
+  cellule_t *dernier;
 };
 
 typedef struct liste liste_t;
+
+
+
+struct cellule_noeud {
+  noeud *nd;
+  int hauteur;
+  struct cellule_noeud *suivant;
+};
+
+typedef struct cellule_noeud cellule_n;
+
+struct liste_noeud {
+  cellule_n *tete;
+};
+
+typedef struct liste_noeud liste_n;
+
+
 
 /* cree une nouvelle liste, initialement vide */
 void init_liste_vide(liste_t *L);
@@ -31,14 +50,16 @@ void init_liste_vide(liste_t *L);
  * et 1 sinon (échec de l'ajout)
  */
 
-int ajouter_fin(liste_t *L, string c);
+int ajouter_fin(liste_t *L, string c, int h);
 
 int ajouter_tete(liste_t *L, string c);
 
 void supprimer_tete(liste_t *L);
 
-int ajouter_file(liste_t *L, noeud *n);
+void init_liste_noeud_vide(liste_n *L);
 
-noeud *pop_file(liste_t *f);
+int ajouter_fin_noeud(liste_n *L, noeud *n, int h);
+
+noeud *supprimer_tete_noeud(liste_n *L, int *h);
 
 #endif /* _LISTES_H */
