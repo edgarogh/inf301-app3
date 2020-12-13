@@ -160,15 +160,16 @@ void afficher_par_niveau(arbre racine, FILE* fout) {
  */
 typedef enum {
   SubtreeValid = 1,
-  SubtreeUnknown = 2,
-  SubtreeInvalid = 4,
-  RecurseReturn = 8,
+  SubtreeInvalid = 2,
+
+  // Return anticipé. "Casse" la récursion
+  RecurseReturn = 3,
 } subtree_valid;
 
 typedef struct {
   arbre* sous_arbre;
   int feuilles;
-  subtree_valid recurse;
+  subtree_valid subtree_validity;
 } sous_arbre_result;
 
 /**
@@ -177,15 +178,15 @@ typedef struct {
  */
 sous_arbre_result ajouter_carac__trouver_sous_arbre(arbre* a, cellule_t* especes) {
   if (*a == NULL) {
-    return (sous_arbre_result) { .sous_arbre = a, .recurse = SubtreeValid, .feuilles = 0 };
+    return (sous_arbre_result) { .sous_arbre = a, .subtree_validity = SubtreeValid, .feuilles = 0 };
   }
 
   // Espèce, le plus simple à gérer
   if (est_esp(*a)) {
     if (liste_contient(especes, (*a)->valeur)) {
-      return (sous_arbre_result) { .sous_arbre = a, .recurse = SubtreeValid, .feuilles = 1 };
+      return (sous_arbre_result) { .sous_arbre = a, .subtree_validity = SubtreeValid, .feuilles = 1 };
     } else {
-      return (sous_arbre_result) { .sous_arbre = NULL, .recurse = SubtreeInvalid, .feuilles = 0 };
+      return (sous_arbre_result) { .sous_arbre = NULL, .subtree_validity = SubtreeInvalid, .feuilles = 0 };
     }
   }
 
@@ -194,44 +195,27 @@ sous_arbre_result ajouter_carac__trouver_sous_arbre(arbre* a, cellule_t* especes
     sous_arbre_result g = ajouter_carac__trouver_sous_arbre(&(*a)->gauche, especes);
     sous_arbre_result d = ajouter_carac__trouver_sous_arbre(&(*a)->droit, especes);
 
-    if (g.recurse == RecurseReturn) {
-      return g;
+    if ((g.subtree_validity == SubtreeValid) && (d.subtree_validity == SubtreeInvalid)) {
+      g.subtree_validity = RecurseReturn;
+    } else if ((g.subtree_validity == SubtreeInvalid) && (d.subtree_validity == SubtreeValid)) {
+      d.subtree_validity = RecurseReturn;
     }
 
-    if (d.recurse == RecurseReturn) {
+    if (g.subtree_validity == RecurseReturn) {
+      return g;
+    } else if (d.subtree_validity == RecurseReturn) {
       return d;
     }
 
-    if ((g.recurse == SubtreeValid) && (d.recurse == SubtreeValid)) {
-      return (sous_arbre_result) { .sous_arbre = a, .recurse = SubtreeValid, .feuilles = g.feuilles + d.feuilles };
-    } else if ((g.recurse == SubtreeUnknown) && (d.recurse == SubtreeUnknown)) {
-      return (sous_arbre_result) { .sous_arbre = a, .recurse = SubtreeUnknown, .feuilles = g.feuilles + d.feuilles };
-    } else if ((g.recurse == SubtreeInvalid) && (d.recurse == SubtreeInvalid)) {
-      return (sous_arbre_result) { .sous_arbre = NULL, .recurse = SubtreeInvalid, .feuilles = g.feuilles + d.feuilles };
-    }
-
-    else if ((g.recurse == SubtreeValid) && (d.recurse == SubtreeInvalid)) {
-      g.recurse = RecurseReturn;
-      return g;
-    } else if ((g.recurse == SubtreeInvalid) && (d.recurse == SubtreeValid)) {
-      d.recurse = RecurseReturn;
-      return d;
-    }
-
-    else if ((g.recurse == SubtreeValid) && (d.recurse == SubtreeUnknown)) {
-      return (sous_arbre_result) { .sous_arbre = a, .recurse = SubtreeValid, .feuilles = g.feuilles };
-    } else if ((g.recurse == SubtreeUnknown) && (d.recurse == SubtreeValid)) {
-      return (sous_arbre_result) { .sous_arbre = a, .recurse = SubtreeValid, .feuilles = d.feuilles };
-    }
-
-    else if ((g.recurse == SubtreeInvalid) && (d.recurse == SubtreeUnknown)) {
-      g.recurse = RecurseReturn;
-      return g;
-    } else if ((g.recurse == SubtreeUnknown) && (d.recurse == SubtreeInvalid)) {
-      d.recurse = RecurseReturn;
-      return d;
+    if ((g.subtree_validity == SubtreeValid) && (d.subtree_validity == SubtreeValid)) {
+      return (sous_arbre_result) { .sous_arbre = a, .subtree_validity = SubtreeValid, .feuilles = g.feuilles + d.feuilles };
+    } else if ((g.subtree_validity == SubtreeInvalid) && (d.subtree_validity == SubtreeInvalid)) {
+      return (sous_arbre_result) { .sous_arbre = NULL, .subtree_validity = SubtreeInvalid, .feuilles = g.feuilles + d.feuilles };
     }
   }
+
+  printf("Unreachable");
+  exit(1);
 }
 
 /**
