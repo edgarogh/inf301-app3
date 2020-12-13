@@ -62,4 +62,13 @@ int ajouter_fin_noeud(liste_n *L, noeud *n, int h);
 
 noeud *supprimer_tete_noeud(liste_n *L, int *h);
 
+int liste_longueur(cellule_t *L);
+
+/**
+ * O(n)
+ *
+ * @returns `true` si la liste contient la chaine `v` (égalité structurelle)
+ */
+bool liste_contient(cellule_t *L, string v);
+
 #endif /* _LISTES_H */

@@ -198,7 +198,92 @@ void afficher_par_niveau(arbre racine, FILE* fout) {
 
 // Acte 4
 
-int ajouter_carac(arbre* a, char* carac, cellule_t* seq) {
-   printf ("<<<<< À faire: fonction ajouter_carac fichier " __FILE__ "\n >>>>>");
-   return 0;
+/**
+ * Utilisé dans `ajouter_carac__trouver_sous_arbre`, qui associe une des
+ * valeurs de cet enum à chaque sous arbre.
+ */
+typedef enum {
+  SubtreeValid = 1,
+  SubtreeInvalid = 2,
+
+  // Return anticipé. "Casse" la récursion
+  RecurseReturn = 3,
+} subtree_valid;
+
+typedef struct {
+  arbre* sous_arbre;
+  int feuilles;
+  subtree_valid subtree_validity;
+} sous_arbre_result;
+
+/**
+ * Renvoie l'adresse de `*a` si `*a` et toutes ses feuilles sont dans
+ * `especes`, NULL sinon
+ */
+sous_arbre_result ajouter_carac__trouver_sous_arbre(arbre* a, cellule_t* especes) {
+  if (*a == NULL) {
+    return (sous_arbre_result) { .sous_arbre = a, .subtree_validity = SubtreeValid, .feuilles = 0 };
+  }
+
+  // Espèce, le plus simple à gérer
+  if (est_esp(*a)) {
+    if (liste_contient(especes, (*a)->valeur)) {
+      return (sous_arbre_result) { .sous_arbre = a, .subtree_validity = SubtreeValid, .feuilles = 1 };
+    } else {
+      return (sous_arbre_result) { .sous_arbre = NULL, .subtree_validity = SubtreeInvalid, .feuilles = 0 };
+    }
+  }
+
+  // Caractère, le plus complexe
+  else {
+    sous_arbre_result g = ajouter_carac__trouver_sous_arbre(&(*a)->gauche, especes);
+    sous_arbre_result d = ajouter_carac__trouver_sous_arbre(&(*a)->droit, especes);
+
+    if ((g.subtree_validity == SubtreeValid) && (d.subtree_validity == SubtreeInvalid)) {
+      g.subtree_validity = RecurseReturn;
+    } else if ((g.subtree_validity == SubtreeInvalid) && (d.subtree_validity == SubtreeValid)) {
+      d.subtree_validity = RecurseReturn;
+    }
+
+    if (g.subtree_validity == RecurseReturn) {
+      return g;
+    } else if (d.subtree_validity == RecurseReturn) {
+      return d;
+    }
+
+    if ((g.subtree_validity == SubtreeValid) && (d.subtree_validity == SubtreeValid)) {
+      return (sous_arbre_result) { .sous_arbre = a, .subtree_validity = SubtreeValid, .feuilles = g.feuilles + d.feuilles };
+    } else if ((g.subtree_validity == SubtreeInvalid) && (d.subtree_validity == SubtreeInvalid)) {
+      return (sous_arbre_result) { .sous_arbre = NULL, .subtree_validity = SubtreeInvalid, .feuilles = g.feuilles + d.feuilles };
+    }
+  }
+
+  printf("Unreachable");
+  exit(1);
+}
+
+/**
+ * Cherche un sous-arbre composé de feuilles de `especes` uniquement et le
+ * déplace en sous-arbre droit d'un nouveau nœud "carac" qui prend sa place.
+ */
+int ajouter_carac(arbre* a, char* carac, cellule_t* especes) {
+  sous_arbre_result sa = ajouter_carac__trouver_sous_arbre(a, especes);
+
+  if (sa.sous_arbre && *(sa.sous_arbre)) {
+    if (sa.feuilles == liste_longueur(especes)) {
+      printf("Double inclusion bonne %d %d\n", sa.feuilles, liste_longueur(especes));
+      arbre carac_n = malloc(sizeof(noeud));
+      carac_n->valeur = carac;
+      carac_n->gauche = NULL;
+      carac_n->droit = *(sa.sous_arbre);
+      *(sa.sous_arbre) = carac_n;
+
+      return 1;
+    } else {
+      printf("Double inclusion pas bonne\n");
+      return 0;
+    }
+  } else {
+    return 0;
+  }
 }
