@@ -156,7 +156,7 @@ void afficher_par_niveau(arbre racine, FILE* fout) {
       ajouter_fin_noeud(f, n->gauche, i+1);
       ajouter_fin(liste_comp, n->gauche->valeur, i+1);
       ajouter_fin(liste_parcours, n->gauche->valeur, i+1);
-  
+
     }
     if (n->droit != NULL && (n->droit->gauche != NULL || n->droit->droit != NULL)){
       ajouter_fin_noeud(f, n->droit, i+1);
@@ -286,4 +286,66 @@ int ajouter_carac(arbre* a, char* carac, cellule_t* especes) {
   } else {
     return 0;
   }
+}
+
+// Acte 5
+
+// parcours en largeur
+
+  /*if (racine == NULL || (racine->gauche == NULL && racine->droit == NULL)){
+    return;
+  }*/
+arbre acte_V(char *nom_fichier){
+  int i = 0;
+  FILE *f = fopen(nom_fichier, "r");
+  if (f == NULL){
+    printf("Nom de fichier incorrect\n");
+    return NULL;
+  }
+
+  noeud *n = nouveau_noeud();
+  arbre d, g;
+  liste_n liste_noeuds;
+  init_liste_noeud_vide(&liste_noeuds);
+
+  liste_n *l = &liste_noeuds;
+  arbre racine = nouveau_noeud();
+
+  char car[100] = "";
+  fscanf(f, "%s", car);
+
+  if (strcmp(car, "") == 0){
+    return NULL;
+  }
+
+  racine->valeur = malloc(100);
+  strcpy(racine->valeur ,car);
+  ajouter_fin_noeud(l, racine, i);
+
+  while(fscanf(f, "%s", car) != EOF){
+    n = supprimer_tete_noeud(l, &i);
+    if (n != NULL){
+      if (strcmp(car, "/") != 0){
+        g = nouveau_noeud();
+        g->valeur = malloc(100);
+        strcpy(g->valeur, car);
+        ajouter_fin_noeud(l, g, i);
+        n->gauche = g;
+      } else {
+        n->gauche = NULL;
+      }
+
+      fscanf(f, "%s", car);
+      if (strcmp(car, "/") != 0){
+        d = nouveau_noeud();
+        d->valeur = malloc(100);
+        strcpy(d->valeur, car);
+        ajouter_fin_noeud(l, d, i);
+        n->droit = d;
+      } else {
+        n->droit = NULL;
+      }
+    }
+  }
+  return racine;
 }

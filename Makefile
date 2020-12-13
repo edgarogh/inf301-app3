@@ -1,4 +1,4 @@
-all: main acte1 acte2 acte3 acte3b acte4
+all: main acte1 acte2 acte3 acte3b acte4 acte5
 
 
 CC=clang
@@ -21,12 +21,16 @@ tests_acte3b: acte3b
 tests_acte4: acte4
 	set -e; for f in `ls tests_acte4`; do ./acte4 tests_acte4/$$f; done; printf "\033[0;32mSuccès\033[0m sur l'acte IV !\n"
 
+tests_acte5: acte5
+	set -e; for f in `ls tests_acte5`; do echo; echo === $$f ===; ./acte5 tests_acte5/$$f; done; printf "\033[0;32mSuccès\033[0m sur l'acte V !\n"
+
 OBJS= arbres.o arbresphylo.o listes.o common_tests.o
 acte1: acte1.o $(OBJS)
 acte2: acte2.o $(OBJS)
 acte3: acte3.o $(OBJS)
 acte3b: acte3b.o $(OBJS)
 acte4: acte4.o $(OBJS)
+acte5: acte5.o $(OBJS)
 
 .PHONY: tests_acte1 tests_acte2 tests_acte3 tests_acte3b tests_acte4
 
@@ -40,4 +44,4 @@ dotcv: dot.c dot.h arbres.o arbres.h
 recherche-appolab: recherche-appolab.o arbresphylo.o arbres.o listes.o
 
 clean:
-	rm -f main dotcv *.o
+	rm -f acte1 acte2 acte3 acte4 acte5 main dotcv *.o

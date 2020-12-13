@@ -1,4 +1,8 @@
-/tests_*
+/tests_acte1
+/tests_acte2
+/tests_acte3
+/tests_acte3b
+/tests_acte4
 main
 dotcv
 recherche-appolab
@@ -7,6 +11,7 @@ acte2
 acte3
 acte3b
 acte4
+acte5
 _tmp
 
 ### C
