@@ -1,0 +1,15 @@
+[package]
+name = "app3"
+version = "0.1.0"
+authors = ["Edgar Onghena <dev@edgar.bzh>"]
+edition = "2018"
+
+[features]
+default = ["ents"]
+ents = []
+hero = []
+
+[dependencies]
+appolab = { git = "https://github.com/edgarogh/appolab", rev = "d26d43e35097d2ecab1c6da4edfabba1ca47f2ff" }
+lazy_static = "1.4"
+regex = "1.4"
