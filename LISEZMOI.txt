@@ -132,3 +132,10 @@ Nombre de caractéristiques de l'espèce à ajouter
  Nombre caractéristiques de l'espèce
  Liste caractéristiques (sur une seule ligne, séparées par un seul espace)
 
+
+ Format des tests de l'acte V :
+
+ Sur chaque ligne on retrouve un noeud
+ Les noeuds sont écrits dans l'ordre où on les rencontre quand on effectue un parcours en largeur de l'arbre
+ Les noeuds vides (qui signifient que ce noeud n'existe pas) sont représentés par des '/'
+
